@@ -4,7 +4,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
@@ -26,9 +25,6 @@ app.use((req, res, next) => {
 // Allow frontend requests and JSON request bodies.
 app.use(cors());
 app.use(express.json());
-
-// Sanitize request data to help prevent MongoDB operator injection.
-app.use(mongoSanitize());
 
 // Rate limit authentication routes to reduce brute-force attempts.
 const authLimiter = rateLimit({
