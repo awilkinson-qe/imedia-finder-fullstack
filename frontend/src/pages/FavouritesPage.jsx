@@ -1,10 +1,13 @@
 // FavouritesPage.jsx - Page for managing user favourites
-// This page allows the user to view, filter, sort, and delete their favourite items. It fetches the user's favourites from the server on load and provides controls for managing them. It also includes a confirmation dialog for deleting all favourites at once.
+// This page allows the user to view, filter, sort, and delete their favourite items.
+// It fetches the user's favourites from the server on load and provides controls for managing them.
+// A confirmation dialog is used before deleting all favourites.
+
 import { useEffect, useMemo, useState, useCallback } from "react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
-// Fallback image
+// Inline fallback image used when artwork is missing or fails to load.
 const FALLBACK_IMAGE =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(`
@@ -20,6 +23,7 @@ const FALLBACK_IMAGE =
 function FavouritesPage() {
   const { token } = useAuth();
 
+  // Core data and UI state
   const [favourites, setFavourites] = useState([]);
   const [message, setMessage] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -27,12 +31,14 @@ function FavouritesPage() {
   const [pendingItemId, setPendingItemId] = useState(null);
   const [deletingAll, setDeletingAll] = useState(false);
 
+  // Filter + sorting controls
   const [filterText, setFilterText] = useState("");
   const [sortBy, setSortBy] = useState("title-asc");
 
+  // Confirmation modal state
   const [showDeleteAllConfirm, setShowDeleteAllConfirm] = useState(false);
 
-  // Toast
+  // Toast helper for short-lived feedback messages
   const showToast = (text) => {
     setToastMessage(text);
     window.clearTimeout(showToast.timeoutId);
@@ -41,16 +47,17 @@ function FavouritesPage() {
     }, 1600);
   };
 
-  // Format date
+  // Format API dates into readable UK format
   const formatReleaseDate = (dateString) => {
     if (!dateString) return "Unknown";
+
     const date = new Date(dateString);
     return Number.isNaN(date.getTime())
       ? dateString
       : date.toLocaleDateString("en-GB");
   };
 
-  // Load favourites (fixed with useCallback)
+  // Load favourites from the backend for the logged-in user
   const loadFavourites = useCallback(async () => {
     if (!token) return;
 
@@ -74,7 +81,7 @@ function FavouritesPage() {
     loadFavourites();
   }, [loadFavourites]);
 
-  // Remove one
+  // Remove a single favourite item
   const removeFavourite = async (itemId) => {
     setMessage("");
     setPendingItemId(itemId);
@@ -96,7 +103,7 @@ function FavouritesPage() {
     }
   };
 
-  // Delete all
+  // Delete all favourites (after confirmation)
   const handleDeleteAll = async () => {
     setDeletingAll(true);
     setMessage("");
@@ -116,7 +123,7 @@ function FavouritesPage() {
     }
   };
 
-  // Filter + sort
+  // Apply filtering and sorting on the client side
   const visibleFavourites = useMemo(() => {
     let processed = [...favourites];
 
@@ -171,6 +178,7 @@ function FavouritesPage() {
         </div>
       )}
 
+      {/* Controls */}
       <div className="card p-4 mb-4 search-card">
         <div className="d-flex justify-content-between mb-3">
           <h2 className="h5 mb-0">Manage favourites</h2>
@@ -208,14 +216,21 @@ function FavouritesPage() {
               <option value="release-oldest">Oldest</option>
             </select>
           </div>
+        </div>
 
-          <div className="col-md-3 d-flex align-items-center">
-            <p className="text-white-50 small mb-0">
-              {visibleFavourites.length} of {favourites.length}
-            </p>
-          </div>
+        <div className="form-text text-white-50 mt-2">
+          Filter saved items by title, artist or type. Use the dropdown to sort your favourites.
         </div>
       </div>
+
+      {!loading && visibleFavourites.length > 0 && (
+        <div className="results-toolbar mb-3">
+          <p className="text-white-50 small mb-0">
+            Showing {visibleFavourites.length} favourite
+            {visibleFavourites.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+      )}
 
       {loading ? (
         <p className="text-center text-white-50">Loading...</p>
@@ -231,12 +246,19 @@ function FavouritesPage() {
             const isPending = pendingItemId === item.itemId;
 
             return (
-              <div className="col-6 col-md-4 col-lg-3 col-xl-2" key={item.itemId}>
+              <div
+                className="col-6 col-md-4 col-lg-3 col-xl-2"
+                key={item.itemId}
+              >
                 <div className="card h-100 result-card">
                   <div className="image-wrapper">
                     <img
                       src={item.image || FALLBACK_IMAGE}
                       alt={item.title}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = FALLBACK_IMAGE;
+                      }}
                     />
                   </div>
 
@@ -269,6 +291,7 @@ function FavouritesPage() {
         </div>
       )}
 
+      {/* Delete all confirmation */}
       {showDeleteAllConfirm && (
         <div className="confirm-overlay">
           <div className="confirm-dialog">
@@ -277,7 +300,6 @@ function FavouritesPage() {
 
             <div className="d-flex justify-content-end gap-2">
               <button
-                type="button"
                 className="btn btn-light rounded-pill px-3"
                 onClick={() => setShowDeleteAllConfirm(false)}
                 disabled={deletingAll}
@@ -286,7 +308,6 @@ function FavouritesPage() {
               </button>
 
               <button
-                type="button"
                 className="btn btn-danger rounded-pill px-3"
                 onClick={handleDeleteAll}
                 disabled={deletingAll}

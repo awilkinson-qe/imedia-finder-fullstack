@@ -1,5 +1,7 @@
 // HomePage.jsx - Main page for searching iTunes and managing results
-// This page allows the user to search the iTunes API, view results, and add/remove items from their favourites. It also supports pagination, sorting, and error handling for a smooth user experience.
+// This page allows the user to search the iTunes API, view results, and add/remove items from their favourites.
+// It also supports pagination, sorting, and error handling for a smooth user experience.
+
 import { useEffect, useMemo, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -20,6 +22,34 @@ const FALLBACK_IMAGE =
     </svg>
   `);
 
+// Build a stronger unique key for rendering and deduping.
+// This avoids collisions when itemId alone is not unique enough.
+const getResultKey = (item) =>
+  [
+    item.itemId || "",
+    item.title || "",
+    item.artist || "",
+    item.mediaType || "",
+    item.releaseDate || "",
+    item.image || "",
+  ].join("|");
+
+// Remove duplicate items using the stronger composite key.
+const dedupeResults = (items) => {
+  const seen = new Set();
+
+  return items.filter((item) => {
+    const key = getResultKey(item);
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+};
+
 function HomePage() {
   const { token } = useAuth();
 
@@ -33,7 +63,8 @@ function HomePage() {
   const [results, setResults] = useState(() => {
     try {
       const saved = sessionStorage.getItem("searchResults");
-      return saved ? JSON.parse(saved) : [];
+      const parsed = saved ? JSON.parse(saved) : [];
+      return dedupeResults(parsed);
     } catch {
       return [];
     }
@@ -60,7 +91,7 @@ function HomePage() {
     () => sessionStorage.getItem("hasMore") === "true"
   );
 
-  // Persist search state.
+  // Persist search state so the user does not lose their current session view.
   useEffect(() => {
     sessionStorage.setItem("searchTerm", term);
     sessionStorage.setItem("searchMedia", media);
@@ -70,7 +101,7 @@ function HomePage() {
     sessionStorage.setItem("hasMore", String(hasMore));
   }, [term, media, results, hasSearched, offset, hasMore]);
 
-  // Load favourites for the current user.
+  // Load favourites for the current user so saved items can be marked in results.
   useEffect(() => {
     const loadFavourites = async () => {
       if (!token) return;
@@ -103,7 +134,7 @@ function HomePage() {
     }, 1600);
   };
 
-  // Format API dates into a readable format.
+  // Format API dates into a readable format for the UI.
   const formatReleaseDate = (dateString) => {
     if (!dateString) return "Unknown";
 
@@ -142,7 +173,7 @@ function HomePage() {
           ? payload.nextOffset
           : newResults.length;
 
-      setResults(newResults);
+      setResults(dedupeResults(newResults));
       setOffset(returnedOffset);
       setHasMore(Boolean(payload.hasMore));
     } catch {
@@ -176,7 +207,7 @@ function HomePage() {
       const payload = res.data.data || {};
       const nextResults = payload.results || [];
 
-      setResults((prev) => [...prev, ...nextResults]);
+      setResults((prev) => dedupeResults([...prev, ...nextResults]));
       setOffset(
         typeof payload.nextOffset === "number"
           ? payload.nextOffset
@@ -190,7 +221,7 @@ function HomePage() {
     }
   };
 
-  // Reset the page state.
+  // Reset the page state and clear the saved session view for this page.
   const handleClear = () => {
     setTerm("");
     setMedia("all");
@@ -210,7 +241,7 @@ function HomePage() {
     sessionStorage.removeItem("hasMore");
   };
 
-  // Add an item to favourites.
+  // Add an item to favourites for the current logged-in user.
   const addFavourite = async (item) => {
     setError("");
     setPendingFavouriteId(item.itemId);
@@ -252,7 +283,7 @@ function HomePage() {
     }
   };
 
-  // Sort already-fetched results on the client.
+  // Sort already-fetched results on the client without needing another API call.
   const sortedResults = useMemo(() => {
     const processed = [...results];
 
@@ -280,7 +311,7 @@ function HomePage() {
   return (
     <div className="container py-4 py-md-5">
       <div className="text-center mb-4 mb-md-5">
-        <h1 className="display-6 fw-bold text-white mb-2">iTunes Search</h1>
+        <h1 className="display-6 fw-bold text-white mb-2">iMedia Finder</h1>
         <p className="text-white-50 mb-0">
           Search media and save your favourites
         </p>
@@ -349,7 +380,7 @@ function HomePage() {
             <div className="col-md-3">
               <button
                 type="submit"
-                className="btn btn-success w-100"
+                className="btn btn-success w-100 rounded-pill"
                 disabled={loading || !term.trim()}
               >
                 {loading ? "Searching..." : "Search"}
@@ -357,9 +388,10 @@ function HomePage() {
             </div>
           </div>
 
-          <p className="text-white-50 small mt-2 mb-0">
+          <div className="form-text text-white-50 mt-2 small">
             Search by title, artist, album, movie, podcast or audiobook.
-          </p>
+            Filter results by media type.
+          </div>
         </form>
       </div>
 
@@ -370,7 +402,7 @@ function HomePage() {
           </p>
 
           <select
-            className="form-select form-select-sm sort-select"
+            className="form-select form-select-sm sort-select rounded-pill"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             aria-label="Sort results"
@@ -388,7 +420,11 @@ function HomePage() {
 
       {loading && (
         <div className="text-center text-white-50 py-5">
-          <div className="spinner-border mb-3" role="status" aria-hidden="true" />
+          <div
+            className="spinner-border mb-3"
+            role="status"
+            aria-hidden="true"
+          />
           <p className="mb-0">Searching iTunes...</p>
         </div>
       )}
@@ -407,7 +443,10 @@ function HomePage() {
           const isPending = pendingFavouriteId === item.itemId;
 
           return (
-            <div className="col-6 col-md-4 col-lg-3 col-xl-2" key={item.itemId}>
+            <div
+              className="col-6 col-md-4 col-lg-3 col-xl-2"
+              key={getResultKey(item)}
+            >
               <div className="card h-100 result-card">
                 <div className="image-wrapper">
                   <img
@@ -430,7 +469,8 @@ function HomePage() {
                     <strong>Type:</strong> {item.mediaType || "Unknown"}
                   </p>
                   <p className="meta mb-2">
-                    <strong>Release:</strong> {formatReleaseDate(item.releaseDate)}
+                    <strong>Release:</strong>{" "}
+                    {formatReleaseDate(item.releaseDate)}
                   </p>
 
                   <button

@@ -1,24 +1,25 @@
 // Favourite.js - Mongoose model for user favourites
-// This module defines the schema and model for storing user favourites in MongoDB.
+// Stores media items saved by users from the iTunes API.
+
 const mongoose = require("mongoose");
 
 const favouriteSchema = new mongoose.Schema(
   {
-    // The user who owns this saved favourite.
+    // Reference to the owning user (one-to-many relationship)
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    // External iTunes identifier stored as a string for consistency.
+    // External iTunes identifier (stored as string for consistency)
     itemId: {
       type: String,
       required: true,
       trim: true,
     },
 
-    // Main display fields used by the frontend.
+    // Core display fields used in the frontend
     title: {
       type: String,
       required: true,
@@ -30,7 +31,7 @@ const favouriteSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Optional metadata.
+    // Optional metadata fields
     image: {
       type: String,
       default: "",
@@ -48,11 +49,12 @@ const favouriteSchema = new mongoose.Schema(
     },
   },
   {
+    // Automatically track creation and update timestamps
     timestamps: true,
   }
 );
 
-// Prevent the same user from saving the same item more than once.
+// Prevent duplicate favourites per user (same item cannot be saved twice)
 favouriteSchema.index({ user: 1, itemId: 1 }, { unique: true });
 
 module.exports = mongoose.model("Favourite", favouriteSchema);

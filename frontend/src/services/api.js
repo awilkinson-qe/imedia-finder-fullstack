@@ -1,14 +1,22 @@
-// api.js - Axios instance for frontend API requests
-// This module exports a configured Axios instance that can be used throughout the frontend to make API requests to the Express backend. It sets the base URL and default headers for JSON content.
+// api.js - Central Axios configuration for frontend API calls
+// This file defines a reusable Axios instance for communicating with the backend.
+// It supports both local development (via proxy) and deployed environments (via Vercel env variable).
+
 import axios from "axios";
 
-// Use deployed backend in production, local proxy in development.
+// Create a configured Axios instance
 const api = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL || "/api",
+  // Use deployed backend if provided, otherwise fall back to local proxy (/api)
+  baseURL: import.meta.env.VITE_API_URL || "/api",
+
+  // Default headers for JSON-based API communication
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+// Optional: You could add interceptors here in future for:
+// - automatically attaching JWT tokens
+// - global error handling
 
 export default api;
