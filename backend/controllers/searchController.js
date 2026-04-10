@@ -46,11 +46,8 @@ const searchItunes = async (req, res) => {
         item.artistName ||
         "Untitled",
       artist: item.artistName || "Unknown artist",
-      image:
-        item.artworkUrl100 ||
-        item.artworkUrl60 ||
-        item.artworkUrl30 ||
-        "",
+      image: (item.artworkUrl100 || item.artworkUrl60 || item.artworkUrl30 || "")
+        .replace(/\/\d+x\d+bb\.jpg/, "/1000x1000bb.jpg"),
       releaseDate: item.releaseDate || "",
       mediaType: item.kind || item.wrapperType || media,
     }));

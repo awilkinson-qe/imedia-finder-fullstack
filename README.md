@@ -17,6 +17,11 @@ A full-stack web application built with React, Express, MongoDB, and JWT authent
 - Form validation using Formik and Yup
 - Password strength feedback on registration
 
+## Live Demo
+
+Frontend: https://itunes-fullstack-app.vercel.app  
+Backend: https://itunes-fullstack-app.onrender.com
+
 ## Tech Stack
 
 ### Frontend
@@ -45,12 +50,13 @@ itunes-fullstack-app/
 
 ## Environment Variables
 
-Create a `backend/.env` file with:
-
 ```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+Frontend (Vercel):
+- VITE_API_URL = https://itunes-fullstack-app.onrender.com/api
+
+Backend (Render):
+- MONGO_URI
+- JWT_SECRET
 ```
 
 ## Installation

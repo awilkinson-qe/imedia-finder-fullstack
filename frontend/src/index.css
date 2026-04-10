@@ -95,8 +95,8 @@ img {
 /* ===== IMAGE ===== */
 .image-wrapper {
   width: 100%;
-  height: 160px;
-  background: #ffffff;
+  aspect-ratio: 2 / 3;
+  background: #f3f4f6;
   overflow: hidden;
 }
 
@@ -104,7 +104,7 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top;
+  object-position: center;
   display: block;
 }
 
