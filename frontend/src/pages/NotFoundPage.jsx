@@ -1,13 +1,14 @@
 // NotFoundPage.jsx - Page for handling 404 Not Found errors
-// This page is displayed when the user navigates to a route that doesn't exist. It provides a simple message and a link to return to the home page.
+// This page is displayed when a user navigates to a route that doesn't exist.
+// It provides a clear message and a simple way back to the home page.
+
 import { Link } from "react-router-dom";
 
 function NotFoundPage() {
   return (
     <div className="container py-5 text-center">
       <div className="notfound-wrapper">
-
-        {/* Large 404 */}
+        {/* Large 404 code */}
         <h1 className="notfound-code mb-3">404</h1>
 
         {/* Message */}
@@ -16,11 +17,10 @@ function NotFoundPage() {
           The page you’re looking for doesn’t exist or may have been moved.
         </p>
 
-        {/* Action */}
+        {/* Navigation back to app */}
         <Link to="/" className="btn btn-light rounded-pill px-4">
           Back to home
         </Link>
-
       </div>
     </div>
   );

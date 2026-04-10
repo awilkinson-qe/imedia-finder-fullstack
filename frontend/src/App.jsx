@@ -1,5 +1,11 @@
 // App.jsx - Main application component with routing and layout
-// This component sets up the main layout of the app, including the navbar, footer, and routing for different pages. It uses React Router for client-side routing and includes a ProtectedRoute component to guard certain routes that require authentication.
+// This component sets up the overall structure of the app, including:
+// - Navigation bar (top)
+// - Routed page content (middle)
+// - Footer (bottom)
+// It uses React Router for client-side navigation and ProtectedRoute
+// to restrict access to authenticated users only.
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppNavbar from "./components/AppNavbar";
 import AppFooter from "./components/AppFooter";
@@ -12,25 +18,22 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
-    // BrowserRouter enables client-side routing across the app.
+    // Enables client-side routing across the application
     <BrowserRouter>
       {/* Main layout wrapper:
-          - flex column for header/content/footer stacking
-          - min-vh-100 ensures footer sits at bottom */}
+          - flex column ensures vertical layout
+          - min-vh-100 keeps footer at the bottom */}
       <div className="d-flex flex-column min-vh-100">
 
-        {/* Top navigation (visible on all pages) */}
+        {/* Top navigation (always visible) */}
         <AppNavbar />
 
-        {/* Main content area:
-            - flex-grow-1 pushes footer to bottom
-            - app-main allows shared spacing control */}
+        {/* Main content area */}
         <main className="flex-grow-1 app-main">
 
-          {/* Route definitions */}
           <Routes>
 
-            {/* Public routes (no authentication required) */}
+            {/* Public routes */}
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
 
@@ -54,13 +57,13 @@ function App() {
               }
             />
 
-            {/* Catch-all route for unknown paths */}
+            {/* Catch-all for unknown routes */}
             <Route path="*" element={<NotFoundPage />} />
 
           </Routes>
         </main>
 
-        {/* Footer (always at bottom of page) */}
+        {/* Footer (always at bottom) */}
         <AppFooter />
       </div>
     </BrowserRouter>

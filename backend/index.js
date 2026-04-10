@@ -1,44 +1,43 @@
 // index.js - Main entry point for the Express server
-// This file sets up the Express server, connects to MongoDB, and registers routes for authentication, searching, and managing favourites. It also includes basic middleware for logging, CORS, JSON parsing, sanitization, and error handling.
+// Sets up the server, connects to MongoDB, and registers all routes.
+// Includes middleware for logging, security, parsing, and error handling.
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
 
+// Route imports (separation of concerns)
 const authRoutes = require("./routes/authRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const favouriteRoutes = require("./routes/favouriteRoutes");
 
+// Load environment variables from .env file
 dotenv.config();
+
+// Establish MongoDB connection
 connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Basic request logger for debugging and visibility.
+// ===== MIDDLEWARE =====
+
+// Basic request logger (useful for debugging during development)
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
   next();
 });
 
-// Allow frontend requests and JSON request bodies.
+// Enable CORS so the frontend can call this API
 app.use(cors());
+
+// Parse incoming JSON requests (required for POST/PUT)
 app.use(express.json());
 
-// Rate limit authentication routes to reduce brute-force attempts.
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many authentication requests. Please try again later.",
-  },
-});
+// ===== ROUTES =====
 
-// Simple health/root route.
+// Health check / root endpoint
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -46,12 +45,14 @@ app.get("/", (req, res) => {
   });
 });
 
-// Route registration.
-app.use("/api/auth", authLimiter, authRoutes);
+// Register API route groups
+app.use("/api/auth", authRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/favourites", favouriteRoutes);
 
-// Catch unknown API routes.
+// ===== ERROR HANDLING =====
+
+// Handle unknown routes (must come AFTER all routes)
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -59,7 +60,7 @@ app.use((req, res) => {
   });
 });
 
-// Central error handler.
+// Central error handler (captures unexpected errors)
 app.use((err, req, res, next) => {
   console.error("Unhandled server error:", err.stack);
 
@@ -69,6 +70,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// ===== START SERVER =====
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

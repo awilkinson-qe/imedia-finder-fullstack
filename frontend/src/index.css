@@ -1,5 +1,5 @@
-/* index.css - Global styles for the iTunes Fullstack App
-This file contains global styles for the entire application, including layout, typography, and component-specific styles
+/* index.css - Global styles for the iMedia Finder App */
+
 /* ===== GLOBAL ===== */
 html,
 body,
@@ -9,40 +9,108 @@ body,
 
 body {
   margin: 0;
-  background: #08192b;
   color: #ffffff;
   font-family: system-ui, -apple-system, sans-serif;
+  background:
+    linear-gradient(rgba(8, 25, 43, 0.68), rgba(8, 25, 43, 0.8)),
+    url("/background.jpg") center center / cover no-repeat fixed;
 }
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 img {
   max-width: 100%;
+  display: block;
 }
 
 /* ===== APP LAYOUT ===== */
 .app-main {
   padding-bottom: 2rem;
+  animation: pageFadeIn 0.45s ease-out;
 }
 
-/* ===== SEARCH / PANEL CARDS ===== */
+/* ===== PANEL CARDS ===== */
 .search-card,
 .auth-card {
-  background: linear-gradient(135deg, #304b66 0%, #3c5d7f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  will-change: transform, box-shadow;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    border-color 0.22s ease;
 }
 
 .search-card {
   border-radius: 16px;
+  background: rgba(48, 75, 102, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
 }
 
 .auth-card {
   border-radius: 20px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+  background: linear-gradient(
+    135deg,
+    rgba(48, 75, 102, 0.97) 0%,
+    rgba(60, 93, 127, 0.97) 100%
+  );
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
   color: #ffffff;
+}
+
+.search-card:hover,
+.auth-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== SEARCH CARD READABILITY ===== */
+.search-card h2,
+.search-card .h5 {
+  color: #ffffff;
+}
+
+.search-card .text-white-50,
+.search-card .small,
+.search-card .form-text,
+.search-card p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.search-card .form-control,
+.search-card .form-select {
+  background: rgba(255, 255, 255, 0.96);
+  color: #111827;
+  border: none;
+  border-radius: 999px;
+  min-height: 46px;
+}
+
+.search-card .form-control::placeholder,
+.search-card .form-select::placeholder {
+  color: #6b7280;
+}
+
+/* ===== AUTH CARD READABILITY ===== */
+.auth-card h1,
+.auth-card h2,
+.auth-card h3,
+.auth-card .form-label {
+  color: #ffffff;
+}
+
+.auth-card .text-white-50,
+.auth-card .form-text,
+.auth-card p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.auth-card .alert {
+  text-align: left;
 }
 
 /* ===== RESULTS TOOLBAR ===== */
@@ -61,6 +129,108 @@ img {
   margin-left: auto;
   border-radius: 999px;
   padding-right: 2rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1f2937;
+  border: none;
+  min-height: 36px;
+}
+
+/* ===== BUTTON HIERARCHY ===== */
+.btn {
+  box-shadow: none !important;
+  font-weight: 600;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Rounded utility/action buttons */
+.btn.rounded-pill,
+.rounded-pill.btn {
+  border-radius: 999px !important;
+}
+
+/* Standard button radius fallback */
+.btn:not(.rounded-pill) {
+  border-radius: 12px;
+}
+
+/* Primary action: Search / create */
+.btn-success,
+.search-btn {
+  background: #1f9d5a !important;
+  border-color: #1f9d5a !important;
+  color: #ffffff !important;
+}
+
+.btn-success:hover,
+.search-btn:hover {
+  background: #18854b !important;
+  border-color: #18854b !important;
+}
+
+/* Secondary actions: Reset / utility buttons */
+.btn-light,
+.btn-outline-light,
+.btn-secondary-soft {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.92) !important;
+  color: #1f2937 !important;
+}
+
+.btn-light:hover,
+.btn-outline-light:hover,
+.btn-secondary-soft:hover {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* Info utility button: suggested password */
+.btn-outline-info {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-info:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.85) !important;
+  color: #ffffff !important;
+}
+
+/* Danger actions: Delete all / destructive */
+.btn-danger {
+  background: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+.btn-danger:hover {
+  background: #bb2d3b !important;
+  border-color: #bb2d3b !important;
+}
+
+/* Danger outline button */
+.btn-outline-danger {
+  border-color: #dc3545 !important;
+  color: #dc3545 !important;
+}
+
+.btn-outline-danger:hover {
+  background: #dc3545 !important;
+  color: #ffffff !important;
 }
 
 /* ===== TOAST ===== */
@@ -69,12 +239,13 @@ img {
   top: 88px;
   right: 24px;
   z-index: 1050;
-  background: rgba(17, 24, 39, 0.92);
+  background: rgba(17, 24, 39, 0.94);
   color: #ffffff;
   padding: 10px 14px;
   border-radius: 12px;
   font-size: 0.9rem;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  animation: toastIn 0.25s ease-out;
 }
 
 /* ===== RESULT CARD ===== */
@@ -84,12 +255,15 @@ img {
   background: #ffffff;
   color: #08192b;
   border: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, box-shadow;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .result-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
 }
 
 /* ===== IMAGE ===== */
@@ -105,7 +279,12 @@ img {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  display: block;
+  transform: scale(1);
+  transition: transform 0.28s ease;
+}
+
+.result-card:hover .image-wrapper img {
+  transform: scale(1.03);
 }
 
 /* ===== CARD BODY ===== */
@@ -117,25 +296,26 @@ img {
 
 /* ===== TITLE ===== */
 .title {
+  min-height: 2.6rem;
+  margin-bottom: 8px;
+  overflow: hidden;
   font-size: 0.95rem;
   font-weight: 700;
-  margin-bottom: 8px;
   line-height: 1.35;
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 2.6rem;
 }
 
 /* ===== META ===== */
 .meta {
+  margin-bottom: 6px;
   font-size: 0.78rem;
   color: #7b8a9a;
-  margin-bottom: 6px;
 }
 
-/* ===== COMPACT FAVOURITE BUTTON ===== */
+/* ===== FAVOURITE BUTTON ===== */
 .fav-icon {
   margin-top: auto;
   align-self: flex-start;
@@ -151,13 +331,23 @@ img {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .fav-icon:hover {
+  transform: translateY(-1px);
   background: #6598cd;
   border-color: #6598cd;
   color: #ffffff;
+}
+
+.fav-icon:active {
+  transform: translateY(0);
 }
 
 .fav-icon.active {
@@ -175,6 +365,34 @@ img {
 .auth-input {
   border-radius: 12px;
   padding: 0.75rem 0.9rem;
+  background: rgba(255, 255, 255, 0.97);
+  color: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.auth-input::placeholder {
+  color: #6b7280;
+}
+
+.auth-card .input-group {
+  align-items: stretch;
+}
+
+.auth-card .input-group .form-control,
+.auth-card .input-group .btn {
+  min-height: 50px;
+}
+
+.auth-card .input-group .btn {
+  border-radius: 12px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 700;
+}
+
+.auth-card .input-group .form-control {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .form-control:focus,
@@ -182,6 +400,16 @@ img {
 .fav-icon:focus {
   border-color: #6598cd;
   box-shadow: 0 0 0 0.2rem rgba(101, 152, 205, 0.25) !important;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #fca5a5 !important;
+}
+
+/* ===== INVALID FEEDBACK ===== */
+.invalid-feedback {
+  color: #ffd2d2;
 }
 
 /* ===== AUTH LINKS ===== */
@@ -192,45 +420,46 @@ img {
 }
 
 .auth-link:hover {
+  color: #ffffff;
   text-decoration: underline;
 }
 
 /* ===== PASSWORD STRENGTH ===== */
 .strength-empty {
-  color: #9ca3af;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .strength-weak {
-  color: #fca5a5;
+  color: #fecaca;
 }
 
 .strength-medium {
-  color: #fcd34d;
+  color: #fde68a;
 }
 
 .strength-strong {
-  color: #86efac;
+  color: #bbf7d0;
 }
 
 /* ===== CONFIRM MODAL ===== */
 .confirm-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 25, 43, 0.65);
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  z-index: 2000;
+  background: rgba(8, 25, 43, 0.65);
 }
 
 .confirm-dialog {
   width: 100%;
   max-width: 420px;
+  padding: 24px;
+  border-radius: 16px;
   background: #ffffff;
   color: #08192b;
-  border-radius: 16px;
-  padding: 24px;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
 }
 
@@ -240,27 +469,89 @@ img {
 
 /* ===== NAVBAR ===== */
 .app-navbar {
-  background: rgba(8, 25, 43, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.2s ease, box-shadow 0.2s ease,
-    border-color 0.2s ease;
+  background: rgba(6, 16, 29, 0.48);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .app-navbar-scrolled {
-  background: rgba(8, 25, 43, 0.94);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  border-bottom-color: rgba(255, 255, 255, 0.1);
+  background: rgba(6, 16, 29, 0.78);
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand,
+.navbar-brand:hover,
+.navbar-brand:focus {
+  color: #ffffff !important;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.nav-link {
+  position: relative;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-weight: 500;
+  transition:
+    color 0.18s ease,
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.nav-link:hover {
+  color: #ffffff !important;
+  transform: translateY(-1px);
 }
 
 .nav-link.active {
   color: #ffffff !important;
+  font-weight: 600;
 }
 
 .navbar-nav .nav-link {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.3rem;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 10px;
+  padding: 0.35rem 0.55rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(101, 152, 205, 0.22) !important;
 }
 
 /* ===== NOT FOUND ===== */
@@ -283,9 +574,9 @@ img {
 }
 
 .footer-subtext {
-  font-size: 0.75rem;
-  color: #6c7a89;
   margin-top: 4px;
+  font-size: 0.75rem;
+  color: #aab6c2;
 }
 
 /* ===== REMOVE BOOTSTRAP CONFLICTS ===== */
@@ -293,6 +584,62 @@ img {
   border: none !important;
 }
 
-.btn {
-  box-shadow: none !important;
+/* ===== ANIMATIONS ===== */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== MOBILE NAVBAR TIDY-UP ===== */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding-top: 0.75rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .nav-link::after {
+    left: 0;
+    right: auto;
+    width: 100px;
+  }
+
+  .navbar-text {
+    margin-top: 0.5rem;
+  }
+
+  .navbar-nav .btn {
+    margin-top: 0.25rem;
+  }
 }

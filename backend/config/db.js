@@ -1,27 +1,30 @@
 // db.js - MongoDB connection setup using Mongoose
-// This module establishes a connection to MongoDB using Mongoose and handles connection events.
+// Establishes a connection to MongoDB and listens for runtime connection events.
 
 const mongoose = require("mongoose");
 
-// Establish a connection to MongoDB using Mongoose.
+// Connect to MongoDB using the connection string from environment variables
 const connectDB = async () => {
   try {
-    // Connect using the URI from environment variables.
-    // Modern versions of Mongoose no longer require useNewUrlParser or useUnifiedTopology.
+    // Modern Mongoose versions no longer require extra connection options
     await mongoose.connect(process.env.MONGODB_URI);
 
     console.log("MongoDB connected");
 
-    // Log connection issues after initial connect (e.g. network drop).
+    // ===== RUNTIME CONNECTION EVENTS =====
+
+    // Triggered if a connection error occurs after initial connection
     mongoose.connection.on("error", (err) => {
       console.error("MongoDB runtime error:", err.message);
     });
 
+    // Triggered if the connection is lost
     mongoose.connection.on("disconnected", () => {
       console.warn("MongoDB disconnected");
     });
+
   } catch (error) {
-    // Fail fast if initial connection cannot be established.
+    // Fail fast if initial connection fails (prevents app running in broken state)
     console.error("MongoDB connection failed:", error.message);
     process.exit(1);
   }

@@ -1,20 +1,21 @@
-// AppNavbar.jsx - Navigation bar component for the iTunes Search app
-// This component renders a responsive navigation bar that includes links to the home page, favourites page, and authentication controls. It also adds a shadow when the page is scrolled for better visibility.  
+// AppNavbar.jsx - Navigation bar component
+// Provides navigation across the app and shows different options depending on authentication state.
+// Includes scroll behaviour to enhance UI (adds shadow when scrolling).
+
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 function AppNavbar() {
-  // Access authentication state and actions.
+  // Auth state + actions
   const { isAuthenticated, user, logout } = useAuth();
 
-  // Used to redirect after logout.
+  // Navigation after logout
   const navigate = useNavigate();
 
-  // Track whether the page has scrolled so we can add a shadow.
+  // Track scroll position to enhance navbar styling
   const [scrolled, setScrolled] = useState(false);
 
-  // Update navbar styling when the page scrolls.
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 8);
@@ -26,7 +27,7 @@ function AppNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle user logout and redirect to login page.
+  // Logout handler
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -39,12 +40,12 @@ function AppNavbar() {
       }`}
     >
       <div className="container">
-        {/* Brand / logo */}
+        {/* Brand */}
         <Link className="navbar-brand fw-semibold" to="/">
-          iTunes
+          iMedia Finder
         </Link>
 
-        {/* Mobile toggle button */}
+        {/* Mobile toggle */}
         <button
           className="navbar-toggler"
           type="button"
@@ -57,9 +58,9 @@ function AppNavbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Collapsible navigation content */}
+        {/* Collapsible content */}
         <div className="collapse navbar-collapse" id="navbarNav">
-          {/* Left side navigation (only when logged in) */}
+          {/* Left navigation */}
           <div className="navbar-nav me-auto gap-lg-2">
             {isAuthenticated && (
               <>
@@ -84,16 +85,18 @@ function AppNavbar() {
             )}
           </div>
 
-          {/* Right side navigation (auth controls) */}
-          <div className="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+          {/* Right navigation */}
+          <div className="navbar-nav ms-auto align-items-start align-items-lg-center gap-lg-3">
             {isAuthenticated ? (
               <>
+                {/* Username */}
                 <span className="navbar-text small text-white-50">
                   {user?.username}
                 </span>
 
+                {/* Logout */}
                 <button
-                  className="btn btn-sm btn-outline-light rounded-pill px-3"
+                  className="btn btn-sm btn-outline-light rounded-pill px-3 align-self-start"
                   onClick={handleLogout}
                 >
                   Log out
