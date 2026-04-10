@@ -1,31 +1,69 @@
 # iTunes Search & Favourites App
 
 ## Overview
+A full-stack web application built with React, Express, MongoDB, and JWT authentication.
 
-A full-stack web application built with React, Express, MongoDB, and JWT authentication. Users can register, log in, search the iTunes API for media content, and save favourites linked to their account.
+Users can:
+- Register and log in
+- Search the iTunes API for media content
+- Save and manage favourites linked to their account
+
+This project demonstrates full-stack integration, API consumption, authentication, and state management.
+
+---
 
 ## Features
 
-- User registration and login
-- JWT-protected routes
+- User registration and login (JWT-based authentication)
+- Protected API routes
 - Search iTunes media by term and media type
-- Incremental “Load more” search results (pagination)
-- Save and remove favourites
+- Incremental “Load more” results (pagination)
+- Add and remove favourites
 - Delete all favourites with confirmation
 - Sort search results (title, artist, release date)
-- Responsive UI built with Bootstrap
-- Form validation using Formik and Yup
-- Password strength feedback on registration
+- Responsive UI using Bootstrap
+- Form validation with Formik and Yup
+- Password strength feedback and suggestion
+
+---
 
 ## Live Demo
 
-Frontend: https://itunes-fullstack-app.vercel.app  
-Backend: https://itunes-fullstack-app.onrender.com
+**Frontend:**  
+https://itunes-fullstack-app.vercel.app  
+
+**Backend:**  
+https://itunes-fullstack-app.onrender.com  
+
+---
+
+## Screenshots
+
+### Home – Search & Results
+Search for media content and manage favourites with sorting and pagination.
+
+![Home](./screenshots/home.png)
+
+![Search](./screenshots/search.png)
+
+![Favourites](./screenshots/favourites.png)
+
+### Login – Authentication
+Secure login with JWT-based authentication.
+
+![Login](./screenshots/login.png)
+
+### Register – Account Creation
+Create an account with real-time password strength feedback.
+
+![Register](./screenshots/register.png)
+
+---
 
 ## Tech Stack
 
 ### Frontend
-- React + Vite
+- React (Vite)
 - React Router
 - Axios
 - Bootstrap
@@ -34,18 +72,18 @@ Backend: https://itunes-fullstack-app.onrender.com
 ### Backend
 - Express.js
 - MongoDB Atlas + Mongoose
-- JWT + bcryptjs
-- Axios
+- JWT (jsonwebtoken)
+- bcryptjs
+- Axios (for external API calls)
+
+---
 
 ## Project Structure
 
 ```
 itunes-fullstack-app/
-├── frontend/   # React application
-└── backend/    # Express API
-    ├── models/
-    ├── controllers/
-    └── routes/
+├── frontend/   # React client (UI + API calls)
+└── backend/    # Express API (auth, search, favourites)
 ```
 
 ## Environment Variables
@@ -55,8 +93,8 @@ Frontend (Vercel):
 - VITE_API_URL = https://itunes-fullstack-app.onrender.com/api
 
 Backend (Render):
-- MONGO_URI
-- JWT_SECRET
+- MONGODB_URI=your_mongodb_connection_string
+- JWT_SECRET=your_secret_key
 ```
 
 ## Installation
@@ -91,3 +129,10 @@ npm run dev
 - Favourites are stored per user in MongoDB
 - Search results are fetched live from the iTunes API
 - All protected routes require a valid JWT token
+
+## Future Improvements
+
+- Add user profile page
+- Add persistent search history
+- Improve accessibility (ARIA + keyboard nav)
+- Add unit tests (Jest / React Testing Library)
