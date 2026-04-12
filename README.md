@@ -31,10 +31,10 @@ This project demonstrates full-stack integration, external API consumption, secu
 
 ## Live Demo
 
-**Frontend:**  
+**Frontend (Vercel):**  
 https://itunes-fullstack-app.vercel.app  
 
-**Backend:**  
+**Backend API (Render):**  
 https://itunes-fullstack-app.onrender.com  
 
 ---
@@ -90,14 +90,30 @@ itunes-fullstack-app/
 
 ## Environment Variables
 
-```env
-Frontend (Vercel):
-- VITE_API_URL = https://itunes-fullstack-app.onrender.com/api
+### Frontend
 
-Backend (Render):
-- MONGODB_URI=your_mongodb_connection_string
-- JWT_SECRET=your_secret_key
+For local development:
+
 ```
+VITE_API_URL=http://localhost:5001/api
+```
+
+For production (Vercel):
+```
+VITE_API_URL=https://itunes-fullstack-app.onrender.com/api
+```
+Backend:
+```
+PORT=5001
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+```
+Note:
+
+- The backend connects to MongoDB Atlas.
+- Local and deployed environments use the same database.
+
+---
 
 ## Installation
 
